@@ -1,0 +1,26 @@
+{
+    "standard_user": {
+        "username": "standard_user",
+        "description": "Normal user with full functionality"
+    },
+    "locked_out_user": {
+        "username": "locked_out_user",
+        "description": "User account that is locked and cannot login"
+    },
+    "problem_user": {
+        "username": "problem_user",
+        "description": "User experiencing various application bugs"
+    },
+    "performance_glitch_user": {
+        "username": "performance_glitch_user",
+        "description": "User experiencing performance issues"
+    },
+    "error_user": {
+        "username": "error_user",
+        "description": "User that encounters errors during usage"
+    },
+    "visual_user": {
+        "username": "visual_user",
+        "description": "User that may experience visual/UI differences"
+    }
+}
