@@ -4,6 +4,7 @@ on:
         branches: [main, master]
     pull_request:
         branches: [main, master]
+    workflow_dispatch: {}
 jobs:
     test:
         timeout-minutes: 60
@@ -12,7 +13,51 @@ jobs:
             BASE_URL: https://www.saucedemo.com
             PASSWORD: ${{ secrets.swaglabs_password }}
         steps:
-            - uses: actions/checkout@v4
+            - name: Checkout repo
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+            - name: Debug and normalize visual snapshots for CI
+              run: |
+                  set -euo pipefail
+                  echo "GITHUB_REF: $GITHUB_REF"
+                  echo "Commit: $(git rev-parse --short HEAD)"
+                  echo "Listing tests/visual directory (recursive):"
+                  ls -la tests/visual || true
+
+                  echo "Listing snapshot directories and contents:"
+                  find tests/visual -type d -name "*-snapshots" -print -exec ls -la {} \; || true
+
+                  echo "Git-tracked snapshot files (first 200 lines):"
+                  git ls-files tests/visual | sed -n '1,200p' || true
+
+                  echo "Normalizing snapshot names to include -chromium-linux suffix when needed..."
+                  for dir in $(find tests/visual -type d -name "*-snapshots"); do
+                    for src in "$dir"/*.png; do
+                      [ -f "$src" ] || continue
+                      name=$(basename "$src" .png)
+                      # Skip if already has -chromium-linux suffix
+                      if [[ "$name" == *-chromium-linux ]]; then
+                        continue
+                      fi
+                      # Replace -chromium-win32 with -chromium-linux, or append -chromium-linux if no platform suffix
+                      if [[ "$name" == *-chromium-win32 ]]; then
+                        newname="${name%-chromium-win32}-chromium-linux"
+                      else
+                        newname="${name}-chromium-linux"
+                      fi
+                      target="$dir/${newname}.png"
+                      if [ ! -f "$target" ]; then
+                        echo "Creating target snapshot: $target from $src"
+                        cp "$src" "$target"
+                      fi
+                    done
+                  done
+
+                  echo "After normalization (first 200 pngs):"
+                  find tests/visual -type f -name "*.png" | sed -n '1,200p'
+
+                  echo "If Playwright still can't find snapshots, inspect the log above to see whether the files exist and match expected names."
             - uses: actions/setup-node@v4
               with:
                   node-version: lts/*

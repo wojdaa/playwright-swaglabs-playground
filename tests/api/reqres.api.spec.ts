@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test'
 
-const API_KEY = 'reqres-free-v1'
+const API_KEY = process.env.API_KEY || ''
 
 test.describe('Reqres API test', () => {
     test('GET /users returns a list of users @api @regression', async ({
