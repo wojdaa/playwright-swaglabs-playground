@@ -4,6 +4,7 @@ pipeline {
   environment {
     BASE_URL = 'https://www.saucedemo.com'
     PASSWORD = credentials('swaglabs_password')
+    API_KEY = credentials('api_key')
   }
 
   stages {
@@ -16,13 +17,67 @@ pipeline {
     stage('Install dependencies') {
       steps {
         sh 'npm ci'
-        sh 'npx playwright install'
+        sh 'npx playwright install --with-deps'
       }
     }
 
-    stage('Run Playwright tests') {
+    stage('Run Smoke Tests') {
       steps {
-        sh 'npx playwright test'
+        sh 'npx playwright test --grep @smoke'
+      }
+    }
+
+    stage('Run Regression Tests') {
+      when {
+        anyOf {
+          branch 'main'
+          branch 'master'
+        }
+      }
+      steps {
+        sh 'npx playwright test --grep @regression'
+      }
+    }
+
+    stage('Run Accessibility Tests') {
+      when {
+        anyOf {
+          branch 'main'
+          branch 'master'
+        }
+      }
+      steps {
+        sh 'npx playwright test --grep @accessibility'
+      }
+    }
+
+    stage('Run Security Tests') {
+      when {
+        anyOf {
+          branch 'main'
+          branch 'master'
+        }
+      }
+      steps {
+        sh 'npx playwright test --grep @security'
+      }
+    }
+
+    stage('Run API Tests') {
+      steps {
+        sh 'npx playwright test --grep @api'
+      }
+    }
+
+    stage('Run Network Tests') {
+      steps {
+        sh 'npx playwright test --grep @network'
+      }
+    }
+
+    stage('Run SEO Tests') {
+      steps {
+        sh 'npx playwright test --grep @seo'
       }
     }
   }
@@ -34,6 +89,15 @@ pipeline {
       }
       archiveArtifacts artifacts: 'test-results/**/*', fingerprint: true, allowEmptyArchive: true
       archiveArtifacts artifacts: 'playwright-report/**', fingerprint: true, allowEmptyArchive: true
+      publishHTML([
+        allowMissing: false,
+        alwaysLinkToLastBuild: true,
+        keepAll: true,
+        reportDir: 'playwright-report',
+        reportFiles: 'index.html',
+        reportName: 'Playwright Test Report',
+        reportTitles: ''
+      ])
     }
   }
 }
