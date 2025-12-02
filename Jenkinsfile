@@ -17,7 +17,7 @@ pipeline {
     stage('Install dependencies') {
       steps {
         sh 'npm ci'
-        sh 'npx playwright install --with-deps'
+        sh 'npx playwright install'
       }
     }
 
@@ -84,20 +84,15 @@ pipeline {
 
   post {
     always {
-      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-        junit 'test-results/playwright-junit.xml'
+      script {
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          junit 'test-results/playwright-junit.xml'
+        }
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          archiveArtifacts artifacts: 'test-results/**/*', fingerprint: true, allowEmptyArchive: true
+          archiveArtifacts artifacts: 'playwright-report/**', fingerprint: true, allowEmptyArchive: true
+        }
       }
-      archiveArtifacts artifacts: 'test-results/**/*', fingerprint: true, allowEmptyArchive: true
-      archiveArtifacts artifacts: 'playwright-report/**', fingerprint: true, allowEmptyArchive: true
-      publishHTML([
-        allowMissing: false,
-        alwaysLinkToLastBuild: true,
-        keepAll: true,
-        reportDir: 'playwright-report',
-        reportFiles: 'index.html',
-        reportName: 'Playwright Test Report',
-        reportTitles: ''
-      ])
     }
   }
 }
