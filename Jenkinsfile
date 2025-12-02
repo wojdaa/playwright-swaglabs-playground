@@ -17,7 +17,7 @@ pipeline {
     stage('Install dependencies') {
       steps {
         sh 'npm ci'
-        sh 'npx playwright install --with-deps'
+        sh 'npx playwright install'
       }
     }
 
@@ -84,7 +84,7 @@ pipeline {
 
   post {
     always {
-      node('any') {
+      script {
         catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
           junit 'test-results/playwright-junit.xml'
         }
