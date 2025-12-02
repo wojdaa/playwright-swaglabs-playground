@@ -10,7 +10,11 @@ Added comprehensive test execution scripts:
 - `test:smoke` - Run critical smoke tests
 - `test:regression` - Run comprehensive regression suite
 - `test:accessibility` - Run accessibility tests
-- `test:critical` - Run smoke or critical tests
+- `test:network` - Run network resilience tests
+- `test:security` - Run security tests
+- `test:seo` - Run SEO tests
+- `test:visual` - Run visual regression tests
+- `test:visual:update` - Update visual snapshots
 - `test:headed` - Run with visible browser
 - `test:ui` - Run with Playwright UI mode
 - `test:debug` - Run in debug mode
@@ -50,6 +54,42 @@ WCAG 2.0/2.1 Level AA compliance:
 - ✅ Checkout flow accessibility (7 tests)
 - ✅ Product detail accessibility (5 tests)
 - ✅ Keyboard navigation (5 tests)
+
+#### @network Tests (3+ tests)
+
+Network resilience and error handling:
+
+- ✅ API failure handling
+- ✅ Maintenance page scenarios
+- ✅ Custom error banners
+
+#### @security Tests (25+ tests)
+
+OWASP-based security testing:
+
+- ✅ SQL injection prevention (4 tests)
+- ✅ XSS prevention (4 tests)
+- ✅ Access control (5 tests)
+- ✅ Session management (3 tests)
+- ✅ Authentication security (3 tests)
+- ✅ Security misconfiguration (5 tests)
+- ✅ Input validation (1+ tests)
+
+#### @seo Tests (3+ tests)
+
+SEO metadata validation:
+
+- ✅ Page titles
+- ✅ Meta descriptions
+- ✅ SEO consistency
+
+#### @visual Tests (3+ tests)
+
+Visual regression testing:
+
+- ✅ Desktop view (1920x1080)
+- ✅ Tablet view (768x1024)
+- ✅ Mobile view (375x667)
 
 ### 3. Created Documentation
 
@@ -135,12 +175,17 @@ npm run test:ui
 
 ## 📊 Test Distribution
 
-| Category      | Count   | Execution Time | Tags               |
-| ------------- | ------- | -------------- | ------------------ |
-| Smoke         | 5       | ~2-5 min       | @smoke @regression |
-| Regression    | 60+     | ~15-30 min     | @regression        |
-| Accessibility | 30+     | ~5-10 min      | @accessibility     |
-| **Total**     | **95+** | **~20-35 min** | -                  |
+| Category      | Count    | Execution Time | Tags                 |
+| ------------- | -------- | -------------- | -------------------- |
+| Smoke         | 5        | ~2-5 min       | @smoke @regression   |
+| Regression    | 60+      | ~15-30 min     | @regression          |
+| Accessibility | 30+      | ~5-10 min      | @accessibility       |
+| API           | 3+       | ~1-2 min       | @api @regression     |
+| Network       | 3+       | ~2-3 min       | @network @regression |
+| Security      | 25+      | ~5-10 min      | @security            |
+| SEO           | 3+       | ~1-2 min       | @seo                 |
+| Visual        | 3+       | ~3-5 min       | @visual              |
+| **Total**     | **130+** | **~30-50 min** | -                    |
 
 ## 🔄 CI/CD Integration Ready
 
