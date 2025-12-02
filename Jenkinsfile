@@ -84,20 +84,22 @@ pipeline {
 
   post {
     always {
-      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-        junit 'test-results/playwright-junit.xml'
+      node('any') {
+        catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+          junit 'test-results/playwright-junit.xml'
+        }
+        archiveArtifacts artifacts: 'test-results/**/*', fingerprint: true, allowEmptyArchive: true
+        archiveArtifacts artifacts: 'playwright-report/**', fingerprint: true, allowEmptyArchive: true
+        publishHTML([
+          allowMissing: false,
+          alwaysLinkToLastBuild: true,
+          keepAll: true,
+          reportDir: 'playwright-report',
+          reportFiles: 'index.html',
+          reportName: 'Playwright Test Report',
+          reportTitles: ''
+        ])
       }
-      archiveArtifacts artifacts: 'test-results/**/*', fingerprint: true, allowEmptyArchive: true
-      archiveArtifacts artifacts: 'playwright-report/**', fingerprint: true, allowEmptyArchive: true
-      publishHTML([
-        allowMissing: false,
-        alwaysLinkToLastBuild: true,
-        keepAll: true,
-        reportDir: 'playwright-report',
-        reportFiles: 'index.html',
-        reportName: 'Playwright Test Report',
-        reportTitles: ''
-      ])
     }
   }
 }
