@@ -29,9 +29,8 @@ pipeline {
 
     stage('Run Regression Tests') {
       when {
-        anyOf {
-          branch 'main'
-          branch 'master'
+        expression {
+          return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master'
         }
       }
       steps {
@@ -41,9 +40,8 @@ pipeline {
 
     stage('Run Accessibility Tests') {
       when {
-        anyOf {
-          branch 'main'
-          branch 'master'
+        expression {
+          return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master'
         }
       }
       steps {
@@ -53,9 +51,8 @@ pipeline {
 
     stage('Run Security Tests') {
       when {
-        anyOf {
-          branch 'main'
-          branch 'master'
+        expression {
+          return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master'
         }
       }
       steps {
