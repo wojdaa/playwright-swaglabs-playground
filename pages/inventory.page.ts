@@ -93,4 +93,21 @@ export class InventoryPage extends BasePage {
     async assertShoppingCartLinkVisible() {
         await expect(this.shoppingCartLink).toBeVisible()
     }
+
+    async assertErrorBannerVisible(expectedMessage?: string) {
+        const errorBanner = this.page.locator(
+            '#api-error-banner, .error-banner, [data-test="error-banner"]'
+        )
+        await expect(errorBanner).toBeVisible()
+        if (expectedMessage) {
+            await expect(errorBanner).toContainText(expectedMessage)
+        }
+    }
+
+    async assertErrorBannerNotVisible() {
+        const errorBanner = this.page.locator(
+            '#api-error-banner, .error-banner, [data-test="error-banner"]'
+        )
+        await expect(errorBanner).toBeHidden()
+    }
 }

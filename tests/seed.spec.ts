@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { loginAs } from '../utils/test-helpers'
 
 test.describe('Seed Test', () => {
-    test('should successfully login and view inventory', async ({ page }) => {
+    test('should successfully login and view inventory @smoke', async ({ page }) => {
         await page.goto('/')
         await loginAs(page, 'standard_user')
 

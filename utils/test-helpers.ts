@@ -39,6 +39,38 @@ export async function waitForPageLoad(page: Page, timeout?: number) {
 }
 
 /**
+ * Verifies basic SEO metadata elements on a page:
+ * - Page title is "Swag Labs"
+ * - Meta description contains "Sauce Labs Swag Labs app"
+ * - Robots meta tag is set to "noindex"
+ * - Viewport meta tag is properly configured
+ * - Lang attribute is set to "en"
+ *
+ * @param page - The Playwright Page object
+ */
+export async function verifyBasicSeoMetadata(page: Page) {
+    await expect(page).toHaveTitle('Swag Labs')
+
+    const metaDescription = page.locator('meta[name="description"]')
+    await expect(metaDescription).toHaveAttribute(
+        'content',
+        'Sauce Labs Swag Labs app'
+    )
+
+    const metaRobots = page.locator('meta[name="robots"]')
+    await expect(metaRobots).toHaveAttribute('content', 'noindex')
+
+    const metaViewport = page.locator('meta[name="viewport"]')
+    await expect(metaViewport).toHaveAttribute(
+        'content',
+        'width=device-width,initial-scale=1'
+    )
+
+    const htmlElement = page.locator('html')
+    await expect(htmlElement).toHaveAttribute('lang', 'en')
+}
+
+/**
  * Takes a visual screenshot using Playwright's built-in screenshot comparison.
  * Automatically sanitizes the filename and uses best practices for visual testing.
  *
