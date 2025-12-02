@@ -28,33 +28,18 @@ pipeline {
     }
 
     stage('Run Regression Tests') {
-      when {
-        expression {
-          return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master'
-        }
-      }
       steps {
         sh 'npx playwright test --grep @regression'
       }
     }
 
     stage('Run Accessibility Tests') {
-      when {
-        expression {
-          return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master'
-        }
-      }
       steps {
         sh 'npx playwright test --grep @accessibility'
       }
     }
 
     stage('Run Security Tests') {
-      when {
-        expression {
-          return env.BRANCH_NAME == 'main' || env.BRANCH_NAME == 'master'
-        }
-      }
       steps {
         sh 'npx playwright test --grep @security'
       }
