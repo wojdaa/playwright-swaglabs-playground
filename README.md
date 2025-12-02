@@ -5,7 +5,7 @@ Comprehensive end-to-end test suite for the [SauceDemo](https://www.saucedemo.co
 This project serves as a realistic **automation playground**, demonstrating:
 
 - clean and scalable **Page Object Model (POM)**,
-- tagged **smoke / regression / accessibility / visual** suites,
+- tagged **smoke / regression / accessibility / api / network / security / seo / visual** suites,
 - strong use of **helpers + utilities**,
 - **CI integration** (GitHub Actions + local Jenkins),
 - best practices for configuration & environment separation,
@@ -47,9 +47,15 @@ This project serves as a realistic **automation playground**, demonstrating:
 │  │  ├─ checkout/
 │  │  ├─ navigation/
 │  │  ├─ performance-user/
-│  │  └─ problem-user/
-│  └─ visual/
-│     └─ tablet-view.spec.ts       # visual regression tests
+│  │  ├─ problem-user/
+│  │  ├─ product-browsing/
+│  │  └─ shopping-cart/
+│  ├─ accessibility/               # WCAG compliance tests
+│  ├─ api/                         # API endpoint tests
+│  ├─ network/                     # Network resilience tests
+│  ├─ security/                    # OWASP security tests
+│  ├─ seo/                         # SEO metadata tests
+│  └─ visual/                      # Visual regression tests
 ├─ test-data/
 │  └─ users.json
 ├─ utils/
@@ -108,8 +114,20 @@ npm run test:regression
 # Accessibility (axe-core)
 npm run test:accessibility
 
-# Critical scenarios
-npm run test:critical
+# API tests
+npm run test:api
+
+# Network resilience
+npm run test:network
+
+# Security tests (OWASP)
+npm run test:security
+
+# SEO validation
+npm run test:seo
+
+# Visual regression
+npm run test:visual
 ```
 Browser / execution modes
 ```npm run test:chromium
@@ -136,8 +154,11 @@ Short summary:
 
 - ```@smoke``` — critical path
 - ```@regression``` — extended workflow coverage
-- ```@critical``` — tests with stronger business impact
-- ```@accessibility``` — axe-core checks
+- ```@accessibility``` — axe-core WCAG checks
+- ```@api``` — API endpoint validation
+- ```@network``` — network resilience and error handling
+- ```@security``` — OWASP security testing
+- ```@seo``` — SEO metadata validation
 - ```@visual``` — visual regression tests
 
 Usage:
