@@ -30,10 +30,28 @@ export default defineConfig({
     },
 
     projects: [
+        // Setup project: runs auth.setup.ts to persist login state via storageState.
+        // See tests/fixtures/pages.fixture.ts and references/fixtures-hooks.md.
+        {
+            name: 'setup',
+            testMatch: /.*\.setup\.ts/,
+        },
+
         {
             name: 'chromium',
             use: { ...devices['Desktop Chrome'] },
         },
+
+        // Authenticated project: reuses saved storageState so tests skip the
+        // login flow. Add tests here that require a logged-in standard_user.
+        // {
+        //     name: 'authenticated',
+        //     use: {
+        //         ...devices['Desktop Chrome'],
+        //         storageState: '.auth/standard-user.json',
+        //     },
+        //     dependencies: ['setup'],
+        // },
 
         // {
         //     name: 'firefox',
