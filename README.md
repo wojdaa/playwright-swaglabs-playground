@@ -42,8 +42,12 @@ This project serves as a realistic **automation playground**, demonstrating:
 │  ├─ checkout-complete.page.ts
 │  └─ ...
 ├─ tests/
+│  ├─ fixtures/
+│  │  └─ pages.fixture.ts          # Custom fixtures for all page objects
 │  ├─ e2e/
 │  │  ├─ authentication/
+│  │  │  ├─ auth.setup.ts          # storageState auth setup (setup project)
+│  │  │  └─ ...
 │  │  ├─ checkout/
 │  │  ├─ navigation/
 │  │  ├─ performance-user/
@@ -408,6 +412,70 @@ Prefer helpers for shared flows (login, addToCart, checkout).
 Keep snapshot baseline names consistent.
 
 Update README if adding new suites, commands or tags.
+
+## 🧩 Playwright Best Practices
+
+This project demonstrates several Playwright best practices from the
+[Playwright Best Practices reference](https://github.com/currents-dev/playwright-best-practices-skill/tree/main/references).
+
+### Custom Fixtures for Page Objects
+
+`tests/fixtures/pages.fixture.ts` extends the base `test` object to provide all page
+objects as fixtures. This avoids the anti-pattern of declaring `let` variables in
+`beforeEach` and ensures each test receives fresh, correctly-scoped instances.
+
+```typescript
+// Import the extended test (and expect) from the fixtures file
+import { test, expect } from '../../fixtures/pages.fixture'
+
+test('can complete checkout', async ({
+    inventoryPage,
+    cartPage,
+    checkoutStepOnePage,
+}) => {
+    await inventoryPage.addProductToCart('Sauce Labs Backpack')
+    // ...
+})
+```
+
+See `tests/e2e/checkout/complete-checkout.spec.ts` for a working example.
+
+### Test Steps (`test.step`)
+
+`test.step()` groups related actions into named steps. This produces clearer
+failure messages and a structured report that mirrors the user journey.
+
+```typescript
+await test.step('Add item to cart', async () => {
+    await inventoryPage.addProductToCart('Sauce Labs Backpack')
+    await inventoryPage.navigateToCart()
+    await cartPage.assertCartItemCount(1)
+})
+```
+
+### Auth Setup with `storageState`
+
+`tests/e2e/authentication/auth.setup.ts` (run via the `setup` playwright project)
+logs in once and saves the browser storage state to `.auth/standard-user.json`.
+
+Tests can then reuse the saved state through the `authenticated` project in
+`playwright.config.ts` (currently commented out as an opt-in example).
+
+```typescript
+// playwright.config.ts – opt-in example
+{
+    name: 'authenticated',
+    use: {
+        ...devices['Desktop Chrome'],
+        storageState: '.auth/standard-user.json',
+    },
+    dependencies: ['setup'],
+}
+```
+
+See [fixtures-hooks.md](https://github.com/currents-dev/playwright-best-practices-skill/blob/main/references/fixtures-hooks.md)
+and [global-setup.md](https://github.com/currents-dev/playwright-best-practices-skill/blob/main/references/global-setup.md)
+for the full reference.
 
 ## 📄 License
 
